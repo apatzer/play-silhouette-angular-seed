@@ -27,8 +27,14 @@ libraryDependencies ++= Seq(
   "com.iheart" %% "ficus" % "1.2.3",
   "com.adrianhurt" %% "play-bootstrap3" % "0.4.4-P24",
   "com.mohiva" %% "play-silhouette-testkit" % "4.0.0-BETA4" % "test",
+  "com.typesafe.play" %% "play-slick" % "2.0.2",
+  "com.typesafe.play" %% "play-slick-evolutions" % "2.0.2",
+  "mysql" % "mysql-connector-java" % "5.1.39",
+  "com.h2database" % "h2" % "1.4.188",
   cache,
-  filters
+  evolutions,
+  filters,
+  ws
 )
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, Yeoman)

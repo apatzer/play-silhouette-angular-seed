@@ -1,22 +1,24 @@
 package modules
 
-import com.google.inject.{ AbstractModule, Provides }
+import com.google.inject.{AbstractModule, Provides}
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services._
 import com.mohiva.play.silhouette.api.util._
-import com.mohiva.play.silhouette.api.{ Environment, EventBus, Silhouette, SilhouetteProvider }
+import com.mohiva.play.silhouette.api.{Environment, EventBus, Silhouette, SilhouetteProvider}
 import com.mohiva.play.silhouette.impl.authenticators._
 import com.mohiva.play.silhouette.impl.providers._
 import com.mohiva.play.silhouette.impl.providers.oauth1._
-import com.mohiva.play.silhouette.impl.providers.oauth1.secrets.{ CookieSecretProvider, CookieSecretSettings }
+import com.mohiva.play.silhouette.impl.providers.oauth1.secrets.{CookieSecretProvider, CookieSecretSettings}
 import com.mohiva.play.silhouette.impl.providers.oauth1.services.PlayOAuth1Service
 import com.mohiva.play.silhouette.impl.providers.oauth2._
 import com.mohiva.play.silhouette.impl.providers.oauth2.state.DummyStateProvider
 import com.mohiva.play.silhouette.impl.services._
 import com.mohiva.play.silhouette.impl.util._
 import com.mohiva.play.silhouette.password.BCryptPasswordHasher
+import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
+import com.mohiva.play.silhouette.persistence.repositories.DelegableAuthInfoRepository
 import models.daos._
-import models.services.{ UserService, UserServiceImpl }
+import models.services.{UserService, UserServiceImpl}
 import net.ceedubs.ficus.Ficus._
 import net.ceedubs.ficus.readers.ArbitraryTypeReader._
 import net.ceedubs.ficus.readers.EnumerationReader._
@@ -37,6 +39,10 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
   def configure() {
     bind[UserService].to[UserServiceImpl]
     bind[UserDAO].to[UserDAOImpl]
+    bind[DelegableAuthInfoDAO[PasswordInfo]].to[PasswordInfoDAO]
+    bind[DelegableAuthInfoDAO[OAuth1Info]].to[OAuth1InfoDAO]
+    bind[DelegableAuthInfoDAO[OAuth2Info]].to[OAuth2InfoDAO]
+    bind[DelegableAuthInfoDAO[OpenIDInfo]].to[OpenIDInfoDAO]
     bind[Silhouette[DefaultEnv]].to[SilhouetteProvider[DefaultEnv]]
     bind[CacheLayer].to[PlayCacheLayer]
     bind[OAuth2StateProvider].to[DummyStateProvider]
@@ -122,6 +128,25 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
 
     val config = configuration.underlying.as[JWTAuthenticatorSettings]("silhouette.authenticator")
     new JWTAuthenticatorService(config, None, idGenerator, clock)
+  }
+
+  /**
+    * Provides the auth info repository.
+    *
+    * @param passwordInfoDAO The implementation of the delegable password auth info DAO.
+    * @param oauth1InfoDAO The implementation of the delegable OAuth1 auth info DAO.
+    * @param oauth2InfoDAO The implementation of the delegable OAuth2 auth info DAO.
+    * @param openIDInfoDAO The implementation of the delegable OpenID auth info DAO.
+    * @return The auth info repository instance.
+    */
+  @Provides
+  def provideAuthInfoRepository(
+                                 passwordInfoDAO: DelegableAuthInfoDAO[PasswordInfo],
+                                 oauth1InfoDAO: DelegableAuthInfoDAO[OAuth1Info],
+                                 oauth2InfoDAO: DelegableAuthInfoDAO[OAuth2Info],
+                                 openIDInfoDAO: DelegableAuthInfoDAO[OpenIDInfo]): AuthInfoRepository = {
+
+    new DelegableAuthInfoRepository(passwordInfoDAO, oauth1InfoDAO, oauth2InfoDAO, openIDInfoDAO)
   }
 
   /**
