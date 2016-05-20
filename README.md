@@ -1,18 +1,12 @@
-Play Silhouette Angular Seed Project
-=====================================
+Play Silhouette Angular Slick Seed Project
+==========================================
 
 The Play Silhouette Angular Seed project shows how [Silhouette](https://github.com/mohiva/play-silhouette) can be used
 to create a SPA with [AngularJS](https://angularjs.org/)/[Satellizer](https://github.com/sahat/satellizer) and Play
 scaffolded by [yeoman](https://github.com/tuplejump/play-yeoman). It's a starting point which can be extended to fit
 your needs.
 
-## Example
-
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
-
-(The "Build App" phase will take a few minutes)
-
-Or you can find a running example of this template under the following URL: https://play-silhouette-angular-seed.herokuapp.com/
+This version persists credentials to a datastore (both H2 in memory or MySQL are provided) using Slick 3.x
 
 ## Features
 
@@ -26,12 +20,15 @@ Or you can find a running example of this template under the following URL: http
 * Remember me functionality
 * [Security headers](https://www.playframework.com/documentation/2.4.x/SecurityHeaders)
 * [CSRF Protection](https://www.playframework.com/documentation/2.4.x/ScalaCsrf)
+* Persistence using Scala Slick 3.x object to relational database mapping
 
 ## Documentation
 
 Consulate the [Silhouette documentation](http://silhouette.mohiva.com/docs) for more information. If you need help with the integration of Silhouette into your project, don't hesitate and ask questions in our [mailing list](https://groups.google.com/forum/#!forum/play-silhouette) or on [Stack Overflow](http://stackoverflow.com/questions/tagged/playframework).
 
 ## Getting started
+
+0. Slick uses MySQL by default. H2 is setup in application.conf but commented out. If you use Postgres or something else, be sure to add the driver in build.sbt. Depending on your H2 version, you may need to rename conf/1.h2.sql as conf/evolutions/default/1.sql as the SQL for setting up the databases is in MySQL format. 
 
 1. Make sure u have [Ruby](https://www.ruby-lang.org/de/) and [node.js](http://nodejs.org/) installed.
 
