@@ -28,7 +28,7 @@ Consulate the [Silhouette documentation](http://silhouette.mohiva.com/docs) for 
 
 ## Getting started
 
-0. Slick uses MySQL by default. H2 is setup in application.conf but commented out. If you use Postgres or something else, be sure to add the driver in build.sbt. Depending on your H2 version, you may need to rename conf/1.h2.sql as conf/evolutions/default/1.sql as the SQL for setting up the databases is in MySQL format. 
+0. In this project, Slick is configured to use MySQL by default. H2 is setup in application.conf but commented out. If you use Postgres or something else, be sure to add the driver in build.sbt. Depending on your H2 version, you may need to rename conf/1.h2.sql as conf/evolutions/default/1.sql as the SQL for setting up the databases is in MySQL format. 
 
 1. Make sure u have [Ruby](https://www.ruby-lang.org/de/) and [node.js](http://nodejs.org/) installed.
 
